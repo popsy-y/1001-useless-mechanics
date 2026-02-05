@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+  <link rel="stylesheet" href="style.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>1001 Useless Mechanics</title>
+  <style>
+    body { font-family: sans-serif; }
+    #controls { margin-bottom: 20px; }
+    /* #sketch-container { border: 1px solid #ccc; width: 400px; height: 400px; } */
+  </style>
+</head>
+<body class="m-0 min-h-screen">
+  <div id="sketch-container" class="fixed inset-0 -z-10 flex items-center justify-center"></div>
+
+  <div id="ui" class="p-10">
+    <h1 class="text-2xl font-bold mb-3">1001 Useless Mechanics</h1>
+
+    <div id="controls" class="flex items-center gap-4 mb-4">
+      <button id="next-mechanic" class="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 rounded shadow border border-gray-300">
+        Next Mechanic (??)
+      </button>
+      <span id="current-id" class="text-gray-600 font-mono text-sm"></span>
+    </div>
+
+    <div id="source">
+      <details>
+        <summary>source</summary>
+        <pre>
+        <!-- <pre class="bg-gray-200 p-3 rounded-sm"> -->
+          <code id="source-code" class="rounded-sm">hogeri</code>
+        </pre>
+      </details>
+      <!-- <button id="show-source" class="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 rounded shadow">show source</button>
+      <pre>
+        <code id="source-code" class="ts language-ts hidden"></code>
+      </pre> -->
+    </div>
+  </div>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/default.min.css">
+  <link rel="stylesheet" href="//unpkg.com/@catppuccin/highlightjs@1.0.1/css/catppuccin-latte.css">
+  <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/languages/typescript.min.js"></script>
+  <script>hljs.highlightAll();</script> -->
+
+  <script type="module" src="/src/main.ts"></script>
+</body>
+</html>
