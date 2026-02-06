@@ -46,7 +46,7 @@ npx tsc --noEmit         # 型チェック
 
 - **型**: 厳格な型付けを使用。`any`は避ける
 - **インポート**: 型インポートには`import type`を使用
-- **命名**: 
+- **命名**:
   - 変数・関数: camelCase (`getColor`, `themeName`)
   - 型・インターフェース: PascalCase (`ThemeColors`, `GetColorFn`)
   - 定数: UPPER_SNAKE_CASE or camelCase
@@ -55,17 +55,20 @@ npx tsc --noEmit         # 型チェック
 ### スケッチの作成方法
 
 自動生成（推奨）:
+
 ```bash
 npm run new-sketch <スケッチ名>
 # 例: npm run new-sketch spring
 ```
 
 これにより以下が自動生成されます：
+
 - `src/daily/{次のID}_{スケッチ名}.ts`
 - 既存の最大ID + 1 が自動付与
 - setup/drawの基本構造付き（getColor対応済み）
 
 手動作成時のテンプレート:
+
 ```typescript
 import type p5 from 'p5'
 import type { GetColorFn } from '../theme/types'
@@ -125,6 +128,7 @@ export const draw = (p: p5, getColor: GetColorFn) => {
 ```
 
 利用可能なスケッチ用色キー:
+
 - `s_bg` - 背景色
 - `s_stroke` - 線・輪郭
 - `s_primary` - メインのオブジェクト塗り
