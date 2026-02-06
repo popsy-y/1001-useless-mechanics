@@ -46,7 +46,7 @@ export const setup = (p: p5, getColor: GetColorFn) => {
 export const draw = (p: p5, getColor: GetColorFn) => {
   p.background(getColor('s_bg'))
   
-  p.fill(getColor('s_fill'))
+  p.fill(getColor('s_primary'))
   p.noStroke()
   p.ellipse(p.width / 2, p.height / 2, 100, 100)
   

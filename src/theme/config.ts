@@ -15,9 +15,10 @@ export const themeConfig: ThemeConfig = {
       // スケッチ部分（p5側）- UIより少し暗めにしてスケッチを際立たせる
       s_bg: '#e6e9ef',         // スケッチ背景（少し濃いめ）
       s_stroke: '#4c4f69',     // 線の色
-      s_fill: '#7287fd',       // 塗りつぶし（ブルー）
+      s_primary: '#7287fd',    // メインの塗りつぶし（ブルー）
+      s_secondary: '#8839ef',  // サブの塗りつぶし（パープル）
       s_accent: '#e78284',     // アクセント（ピンク）
-    },
+    }
   },
 }
 

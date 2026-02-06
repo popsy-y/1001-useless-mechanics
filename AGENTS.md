@@ -80,7 +80,7 @@ export const setup = (p: p5, getColor: GetColorFn) => {
 
 export const draw = (p: p5, getColor: GetColorFn) => {
   p.background(getColor('s_bg'))
-  p.fill(getColor('s_fill'))
+  p.fill(getColor('s_primary'))
   p.noStroke()
   p.ellipse(p.width / 2, p.height / 2, 100, 100)
 }
@@ -105,7 +105,8 @@ export const themeConfig: ThemeConfig = {
       border: '#9ca0b0',       // 枠線
       s_bg: '#e6e9ef',         // p5 背景
       s_stroke: '#4c4f69',     // 線
-      s_fill: '#7287fd',       // 塗りつぶし
+      s_primary: '#7287fd',    // メインの塗りつぶし
+      s_secondary: '#8839ef',  // サブの塗りつぶし
       s_accent: '#e78284',     // アクセント
     },
   },
@@ -117,7 +118,7 @@ export const themeConfig: ThemeConfig = {
 ```typescript
 export const draw = (p: p5, getColor: GetColorFn) => {
   p.background(getColor('s_bg'))      // サジェストが出ます
-  p.fill(getColor('s_fill'))          // s_stroke, s_accentも使用可能
+  p.fill(getColor('s_primary'))       // s_secondary, s_stroke, s_accentも使用可能
   p.stroke(getColor('s_stroke'))
   // ...
 }
@@ -126,7 +127,8 @@ export const draw = (p: p5, getColor: GetColorFn) => {
 利用可能なスケッチ用色キー:
 - `s_bg` - 背景色
 - `s_stroke` - 線・輪郭
-- `s_fill` - オブジェクト塗り
+- `s_primary` - メインのオブジェクト塗り
+- `s_secondary` - サブのオブジェクト塗り
 - `s_accent` - ハイライト・反応色
 
 ## URLルーティング
