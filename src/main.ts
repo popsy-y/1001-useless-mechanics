@@ -1,10 +1,14 @@
 import p5 from "p5"
 import hljs from 'highlight.js'
 import typescript from 'highlight.js/lib/languages/typescript'
+import '@catppuccin/highlightjs/css/catppuccin-latte.css'
+import './codePanel.css'
+import { initTheme, setRandomTheme, createGetColor, getCurrentThemeName } from './theme'
+import type { GetColorFn } from './theme/types'
 
 interface SketchModule {
-  setup: (p: p5) => void
-  draw: (p: p5) => void
+  setup: (p: p5, getColor: GetColorFn) => void
+  draw: (p: p5, getColor: GetColorFn) => void
 }
 
 const sketchModules: Record<string, () => Promise<unknown>> = import.meta.glob(
@@ -17,8 +21,10 @@ const sketchSources: Record<string, () => Promise<unknown>> = import.meta.glob("
 
 const sketchContainer = document.getElementById("sketch-container") as HTMLElement
 const nextButton = document.getElementById("next-mechanic") as HTMLButtonElement
+const themeButton = document.getElementById("change-theme") as HTMLButtonElement
 const currentIdDisplay = document.getElementById("current-id") as HTMLElement
 const sourceCodeBlock = document.getElementById("source-code") as HTMLElement
+const themeNameDisplay = document.getElementById("theme-name") as HTMLElement
 
 hljs.registerLanguage('typescript', typescript)
 hljs.highlightElement(sourceCodeBlock)
@@ -30,6 +36,7 @@ interface SketchInfo {
   path: string
   id: string
   name: string
+  title: string
 }
 
 function getAllSketches(): SketchInfo[] {
@@ -41,10 +48,13 @@ function getAllSketches(): SketchInfo[] {
       const sketchName = fileNameWithExtension.split(".")[0]
       const match = sketchName.match(/^(\d+)/)
       if (match) {
+        const id = match[1]
+        const title = sketchName.substring(id.length + 1) // Remove "${id}_" prefix
         sketches.push({
           path,
-          id: match[1],
-          name: sketchName
+          id,
+          name: sketchName,
+          title
         })
       }
     }
@@ -92,7 +102,7 @@ async function loadSketch(sketchInfo: SketchInfo) {
   sketchContainer.innerHTML = ''
   
   currentSketchPath = sketchInfo.path
-  currentIdDisplay.textContent = `#${sketchInfo.id}`
+  currentIdDisplay.textContent = `#${sketchInfo.id} "${sketchInfo.title}"`
   updateUrl(sketchInfo.id)
   
   try {
@@ -100,11 +110,12 @@ async function loadSketch(sketchInfo: SketchInfo) {
     const sketch = (await moduleLoader()) as SketchModule
     
     if (sketch && typeof sketch.setup === "function" && typeof sketch.draw === "function") {
+      const getColor = createGetColor()
       currentSketchInstance = new p5((p: p5) => {
         p.setup = () => {
-          sketch.setup(p)
+          sketch.setup(p, getColor)
         }
-        p.draw = () => sketch.draw(p)
+        p.draw = () => sketch.draw(p, getColor)
       }, sketchContainer)
     } else {
       console.error("選択されたファイルにsetupまたはdraw関数が含まれていません:", sketchInfo.path)
@@ -138,6 +149,12 @@ function loadRandomSketch() {
   }
 }
 
+function updateThemeDisplay() {
+  if (themeNameDisplay) {
+    themeNameDisplay.textContent = `theme: ${getCurrentThemeName()}`
+  }
+}
+
 // イベントリスナー
 document.addEventListener("DOMContentLoaded", () => {
   const sketches = getAllSketches()
@@ -155,8 +172,26 @@ document.addEventListener("DOMContentLoaded", () => {
     loadSketch(initialSketch)
   }
   
+  // テーマ初期化
+  initTheme()
+  updateThemeDisplay()
+  
   // ランダムボタンのイベント
   nextButton.addEventListener("click", loadRandomSketch)
+  
+  // テーマ切り替えボタンのイベント
+  themeButton.addEventListener("click", () => {
+    setRandomTheme()
+    updateThemeDisplay()
+    // 現在のスケッチをリロードして新しいテーマを適用
+    const currentId = getIdFromUrl()
+    if (currentId) {
+      const sketch = getSketchById(currentId)
+      if (sketch) {
+        loadSketch(sketch)
+      }
+    }
+  })
   
   // URL変更を監視（ブラウザバック/フォワード対応）
   window.addEventListener("popstate", () => {

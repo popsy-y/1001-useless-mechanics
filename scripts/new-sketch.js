@@ -32,22 +32,27 @@ function getNextId() {
 
 function generateSketchTemplate(name) {
   return `import type p5 from 'p5'
+import type { GetColorFn } from '../theme/types'
+import { createFitCanvas } from '../resize/canvas'
+import { resizer } from '../resize/resize'
 
-export const setup = (p: p5) => {
-  // キャンバスサイズは自由に設定できます
-  // 例: p.createCanvas(800, 600)
-  p.createCanvas(p.windowWidth, p.windowHeight)
+export const setup = (p: p5, getColor: GetColorFn) => {
+  createFitCanvas(600, 600, p)
+  resizer.p5(p)
   
-  p.background(240)
+  p.background(getColor('s_bg'))
 }
 
-export const draw = (p: p5) => {
-  // ここに描画コードを書きます
-  p.background(240)
+export const draw = (p: p5, getColor: GetColorFn) => {
+  p.background(getColor('s_bg'))
   
-  p.fill(100)
+  p.fill(getColor('s_fill'))
   p.noStroke()
   p.ellipse(p.width / 2, p.height / 2, 100, 100)
+  
+  // アクセントカラーの小さな円を追加
+  p.fill(getColor('s_accent'))
+  p.ellipse(p.width / 2 + 30, p.height / 2 - 30, 30, 30)
 }
 `
 }
@@ -63,7 +68,7 @@ function main() {
   
   const sketchName = args[0]
   const nextId = getNextId()
-  const idStr = String(nextId).padStart(2, '0')
+  const idStr = String(nextId)
   const fileName = `${idStr}_${sketchName}.ts`
   const filePath = path.join(dailyDir, fileName)
   

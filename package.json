@@ -14,6 +14,7 @@
     "vite": "^6.3.5"
   },
   "dependencies": {
+    "@catppuccin/highlightjs": "^1.0.1",
     "@tailwindcss/vite": "^4.1.8",
     "@types/highlightjs": "^9.12.6",
     "@types/p5": "^1.7.6",
