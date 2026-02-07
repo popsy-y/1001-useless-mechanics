@@ -2,22 +2,35 @@ import type { ThemeConfig } from './types'
 
 export const themeConfig: ThemeConfig = {
   useDefaultTheme: false,
-  defaultTheme: 'frappe-light',
+  defaultTheme: 'tearoom',
   themes: {
-    'frappe-light': {
+    'tearoom': {
       // UI部分（HTML側）
-      bg: '#f2f4f8',           // 明るいグレー背景
-      panelOpacity: 0.85,      // パネルは少し透明
-      text: '#4c4f69',         // ダークグレーテキスト
-      textMuted: '#6c6f85',    // 薄めのテキスト
-      border: '#9ca0b0',       // 枠線
+      bg: '#bf8d69',           
+      panelOpacity: 0.85,      
+      text: '#1f2832',         
+      textMuted: '#606963',    
+      border: '#faaeaa',       
       
-      // スケッチ部分（p5側）- UIより少し暗めにしてスケッチを際立たせる
-      s_bg: '#e6e9ef',         // スケッチ背景（少し濃いめ）
-      s_stroke: '#4c4f69',     // 線の色
-      s_primary: '#7287fd',    // メインの塗りつぶし（ブルー）
-      s_secondary: '#8839ef',  // サブの塗りつぶし（パープル）
-      s_accent: '#e78284',     // アクセント（ピンク）
+      s_bg: '#fffbf7',         
+      s_stroke: '#a33333',     
+      s_primary: '#74b543',    
+      s_secondary: '#0e5746',  
+      s_accent: '#fc7274',     
+    },
+    'bacon': {
+      // UI部分（HTML側）
+      bg: '#ede8d7',           
+      panelOpacity: 0.85,      
+      text: '#242758',         
+      textMuted: '#4a4c6f',    
+      border: '#ecabab',       
+      
+      s_bg: '#eed5b6',         
+      s_stroke: '#f18424',     
+      s_primary: '#ecabab',    
+      s_secondary: '#242758',  
+      s_accent: '#f18424',     
     }
   },
 }
