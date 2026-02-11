@@ -24,7 +24,7 @@ button{
 }
 
 #ui {
-  background-color: rgba(var(--color-panel-bg), var(--color-panel-opacity));
+  background-color: var(--color-panel-bg);
 }
 
 #current-id {
@@ -64,6 +64,10 @@ button{
 
 #source summary {
   color: var(--color-text);
+}
+
+#source code {
+  background-color: rgba(255, 255, 255, var(--color-panel-opacity)) !important;
 }
 
 .hidden{

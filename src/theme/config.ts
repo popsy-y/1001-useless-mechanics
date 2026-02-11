@@ -10,7 +10,7 @@ export const themeConfig: ThemeConfig = {
     "neonsurf": {
       // UI部分（HTML側）
       bg: "#3d64b9",
-      panelOpacity: 0.85,
+      panelOpacity: 0.6,
       text: "#d1e8f0",
       textMuted: "#a5b7bd",
       border: "#dde128",
@@ -24,7 +24,7 @@ export const themeConfig: ThemeConfig = {
     "bacon": {
       // UI部分（HTML側）
       bg: "#ede8d7",
-      panelOpacity: 0.85,
+      panelOpacity: 0.4,
       text: "#242758",
       textMuted: "#4a4c6f",
       border: "#ecabab",

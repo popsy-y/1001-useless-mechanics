@@ -29,6 +29,13 @@ export function setRandomTheme(): ThemeName {
   return newTheme
 }
 
+function hexToRgba(hex: string, alpha: number): string {
+  const r = parseInt(hex.slice(1, 3), 16)
+  const g = parseInt(hex.slice(3, 5), 16)
+  const b = parseInt(hex.slice(5, 7), 16)
+  return `rgba(${r}, ${g}, ${b}, ${alpha})`
+}
+
 export function applyThemeToDOM(): void {
   const theme = getCurrentTheme()
   const root = document.documentElement
@@ -38,7 +45,7 @@ export function applyThemeToDOM(): void {
   root.style.setProperty('--color-text', theme.text)
   root.style.setProperty('--color-text-muted', theme.textMuted)
   root.style.setProperty('--color-border', theme.border)
-  root.style.setProperty('--color-panel-bg', theme.bg)
+  root.style.setProperty('--color-panel-bg', hexToRgba(theme.bg, theme.panelOpacity))
   root.style.setProperty('--color-panel-opacity', String(theme.panelOpacity))
   root.style.setProperty('--color-s-accent', theme.s_accent)
   root.style.setProperty('--color-s-secondary', theme.s_secondary)
