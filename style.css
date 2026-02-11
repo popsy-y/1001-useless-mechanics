@@ -24,7 +24,7 @@ button{
 }
 
 #ui {
-  background-color: var(--color-panel-bg);
+  /* background-color: var(--color-panel-bg); */
 }
 
 #current-id {
