@@ -10,8 +10,17 @@
 }
 
 body {
+  touch-action: none;
   background-color: var(--color-bg);
   color: var(--color-text);
+}
+
+canvas{
+  /* touch-action: none; */
+}
+
+button{
+  font-weight: bold;
 }
 
 #ui {
@@ -24,6 +33,29 @@ body {
 
 #theme-name {
   color: var(--color-text-muted);
+}
+
+#page-title {
+  color: var(--color-text);
+}
+
+#next-mechanic {
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  border-color: var(--color-border);
+}
+
+#next-mechanic:hover {
+  background-color: var(--color-s-accent);
+  color: var(--color-s-secondary);
+}
+
+#theme-trigger {
+  color: var(--color-text-muted);
+}
+
+#theme-trigger:hover {
+  color: var(--color-text);
 }
 
 #source details {
@@ -40,4 +72,41 @@ body {
 
 .block{
     display: block;
+}
+
+/*
+Source - https://stackoverflow.com/a/74691376
+Posted by fuweichin, modified by community. See post 'Timeline' for change history
+Retrieved 2026-02-07, License - CC BY-SA 4.0
+*/
+
+/* prevent pull-to-refresh for Safari 16+ */
+@media screen and (pointer: coarse) {
+  @supports (-webkit-backdrop-filter: blur(1px)) and (overscroll-behavior-y: none)  {
+    html {
+      min-height: 100.3%;
+      overscroll-behavior-y: none;
+    }
+  }
+}
+/* prevent pull-to-refresh for Safari 9~15 */
+@media screen and (pointer: coarse) {
+  @supports (-webkit-backdrop-filter: blur(1px)) and (not (overscroll-behavior-y: none))  {
+    html {
+      height: 100%;
+      overflow: hidden;
+    }
+    body {
+      margin: 0px;
+      max-height: 100%; /* or `height: calc(100% - 16px);` if body has default margin */
+      overflow: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+    /* in this case to disable pinch-zoom, set `touch-action: pan-x pan-y;` on `body` instead of `html` */
+  }
+}
+
+/* prevent pull-to-refresh for Chrome 63+ */
+canvas{
+  overscroll-behavior-y: none;
 }

@@ -40,6 +40,8 @@ export function applyThemeToDOM(): void {
   root.style.setProperty('--color-border', theme.border)
   root.style.setProperty('--color-panel-bg', theme.bg)
   root.style.setProperty('--color-panel-opacity', String(theme.panelOpacity))
+  root.style.setProperty('--color-s-accent', theme.s_accent)
+  root.style.setProperty('--color-s-secondary', theme.s_secondary)
 }
 
 export function createGetColor(): GetColorFn {

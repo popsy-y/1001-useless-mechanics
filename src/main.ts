@@ -9,16 +9,6 @@ import type { GetColorFn } from './theme/types'
 interface SketchModule {
   setup: (p: p5, getColor: GetColorFn) => void
   draw: (p: p5, getColor: GetColorFn) => void
-  keyPressed?: (p: p5, getColor: GetColorFn, event?: KeyboardEvent) => boolean | void
-  keyReleased?: (p: p5, getColor: GetColorFn, event?: KeyboardEvent) => boolean | void
-  keyTyped?: (p: p5, getColor: GetColorFn, event?: KeyboardEvent) => boolean | void
-  doubleClicked?: (p: p5, getColor: GetColorFn, event?: MouseEvent) => boolean | void
-  mouseClicked?: (p: p5, getColor: GetColorFn, event?: MouseEvent) => boolean | void
-  mouseDragged?: (p: p5, getColor: GetColorFn, event?: MouseEvent) => boolean | void
-  mouseMoved?: (p: p5, getColor: GetColorFn, event?: MouseEvent) => boolean | void
-  mousePressed?: (p: p5, getColor: GetColorFn, event?: MouseEvent) => boolean | void
-  mouseReleased?: (p: p5, getColor: GetColorFn, event?: MouseEvent) => boolean | void
-  mouseWheel?: (p: p5, getColor: GetColorFn, event?: WheelEvent) => boolean | void
 }
 
 const sketchModules: Record<string, () => Promise<unknown>> = import.meta.glob(
@@ -31,10 +21,10 @@ const sketchSources: Record<string, () => Promise<unknown>> = import.meta.glob("
 
 const sketchContainer = document.getElementById("sketch-container") as HTMLElement
 const nextButton = document.getElementById("next-mechanic") as HTMLButtonElement
-const themeButton = document.getElementById("change-theme") as HTMLButtonElement
 const currentIdDisplay = document.getElementById("current-id") as HTMLElement
 const sourceCodeBlock = document.getElementById("source-code") as HTMLElement
 const themeNameDisplay = document.getElementById("theme-name") as HTMLElement
+const themeTrigger = document.getElementById("theme-trigger") as HTMLElement
 
 hljs.registerLanguage('typescript', typescript)
 hljs.highlightElement(sourceCodeBlock)
@@ -126,38 +116,6 @@ async function loadSketch(sketchInfo: SketchInfo) {
           sketch.setup(p, getColor)
         }
         p.draw = () => sketch.draw(p, getColor)
-        
-        // Register optional event handlers if they exist
-        if (typeof sketch.keyPressed === "function") {
-          p.keyPressed = (event?: KeyboardEvent) => sketch.keyPressed!(p, getColor, event)
-        }
-        if (typeof sketch.keyReleased === "function") {
-          p.keyReleased = (event?: KeyboardEvent) => sketch.keyReleased!(p, getColor, event)
-        }
-        if (typeof sketch.keyTyped === "function") {
-          p.keyTyped = (event?: KeyboardEvent) => sketch.keyTyped!(p, getColor, event)
-        }
-        if (typeof sketch.doubleClicked === "function") {
-          p.doubleClicked = (event?: MouseEvent) => sketch.doubleClicked!(p, getColor, event)
-        }
-        if (typeof sketch.mouseClicked === "function") {
-          p.mouseClicked = (event?: MouseEvent) => sketch.mouseClicked!(p, getColor, event)
-        }
-        if (typeof sketch.mouseDragged === "function") {
-          p.mouseDragged = (event?: MouseEvent) => sketch.mouseDragged!(p, getColor, event)
-        }
-        if (typeof sketch.mouseMoved === "function") {
-          p.mouseMoved = (event?: MouseEvent) => sketch.mouseMoved!(p, getColor, event)
-        }
-        if (typeof sketch.mousePressed === "function") {
-          p.mousePressed = (event?: MouseEvent) => sketch.mousePressed!(p, getColor, event)
-        }
-        if (typeof sketch.mouseReleased === "function") {
-          p.mouseReleased = (event?: MouseEvent) => sketch.mouseReleased!(p, getColor, event)
-        }
-        if (typeof sketch.mouseWheel === "function") {
-          p.mouseWheel = (event?: WheelEvent) => sketch.mouseWheel!(p, getColor, event)
-        }
       }, sketchContainer)
     } else {
       console.error("選択されたファイルにsetupまたはdraw関数が含まれていません:", sketchInfo.path)
@@ -221,8 +179,8 @@ document.addEventListener("DOMContentLoaded", () => {
   // ランダムボタンのイベント
   nextButton.addEventListener("click", loadRandomSketch)
   
-  // テーマ切り替えボタンのイベント
-  themeButton.addEventListener("click", () => {
+  // テーマ名/ダイスアイコンクリックでテーマ切り替え
+  themeTrigger.addEventListener("click", () => {
     setRandomTheme()
     updateThemeDisplay()
     // 現在のスケッチをリロードして新しいテーマを適用

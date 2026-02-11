@@ -4,15 +4,6 @@ import { resizer } from '../resize/resize'
 import { createFitCanvas } from '../resize/canvas'
 import { lerp } from '../utility/math'
 
-export const setup = (p: p5, clr: GetColorFn) => {
-  createFitCanvas(600, 600, p)
-  resizer.p5(p)
-  
-  p.strokeWeight(3)
-
-  p.background(clr('s_bg'))
-}
-
 const PI = 3.141592653589793238
 let MN = -PI/4
 let MX = PI/2.5
@@ -23,7 +14,31 @@ let aVel = 0
 
 let dragging = false
 
+export const setup = (p: p5, clr: GetColorFn) => {
+  createFitCanvas(600, 600, p)
+  resizer.p5(p)
+
+  p.strokeWeight(3)
+
+  p.background(clr('s_bg'))
+
+  p.mousePressed = () => {
+    startDrag(p)
+    return false
+  }
+
+  p.mouseDragged = () => {
+    return false
+  }
+
+  p.mouseReleased = () => {
+    endDrag()
+    return false
+  }
+}
+
 export const draw = (p: p5, clr: GetColorFn) => {
+
   const w = p.width
   const h = p.height
 
@@ -39,7 +54,7 @@ export const draw = (p: p5, clr: GetColorFn) => {
 
   // body
   p.rectMode(p.CENTER)
-  p.fill(clr('s_primary'))
+  p.fill(clr('s_accent'))
   p.stroke(clr('s_stroke'))
   p.push()
   p.translate(cx, cy)
@@ -53,15 +68,14 @@ export const draw = (p: p5, clr: GetColorFn) => {
   p.rect(cx, cy + w/4, 10, cy)
   p.circle(cx, cy, 10)
 
-  if (p.mouseIsPressed && (within(w, h, p.mouseX, p.mouseY) || dragging)){
+  if (dragging){
     dragging = true
 
     aVel = 0
 
     const msx = p.mouseX - cx
     const msy = p.mouseY - cy
-    ang = Math.min(MX, Math.max(MN, lerp(ang, -Math.atan2(msx, msy) + PI/2, .06)))
-
+    ang = Math.min(MX, Math.max(MN, lerp(ang, -Math.atan2(msx, msy) + PI/2, .02)))
     return
   }else{
     dragging = false
@@ -69,6 +83,7 @@ export const draw = (p: p5, clr: GetColorFn) => {
 
   // ang -> MN
   if (ang < MN || Math.abs(ang - MN) < .01){
+    ang = MN
     aVel = -aVel*.6
 
     if(aVel < .0001){
@@ -82,3 +97,8 @@ export const draw = (p: p5, clr: GetColorFn) => {
 }
 
 const within = (rx: number, ry: number, x: number, y: number) => (x >= 0 && x <= rx && y >= 0 && y <= ry)
+
+const startDrag = (p: p5) => {
+  if (within(p.width, p.height, p.mouseX, p.mouseY)) dragging = true
+}
+const endDrag = () => dragging = false
