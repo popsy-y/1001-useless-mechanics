@@ -1,163 +1,146 @@
 # 1001 Useless Mechanics
 
-p5.jsを使ったインタラクティブな仕掛け（メカニクス）のギャラリーサイト
+Agent guidance for this repository.
 
-## 技術スタック
+This project is a p5.js gallery of interactive sketches built with Vite and TypeScript.
+The app loads sketches from `src/daily/*.ts`, applies a theme, and renders source code with highlight.js.
 
-- **p5.js** (v2.0.2) - クリエイティブコーディング
-- **Vite** (v6.3.5) - ビルドツール
-- **TypeScript** (~5.8.3) - 型付きJavaScript
-- **TailwindCSS** (v4.1.8) - CSSフレームワーク
-- **highlight.js** (v11.11.1) - シンタックスハイライト
+## What Matters Most
 
-## 開発コマンド
+- Prefer small, safe changes that keep sketches working in the browser.
+- Preserve the existing sketch-loading flow in `src/main.ts`.
+- Keep TypeScript strictness intact; the build already runs `tsc`.
+- Match the file you are editing instead of reformatting the whole repo.
+- If you add new conventions, make them fit the current style first.
 
-```bash
-npm run dev              # 開発サーバー起動 (http://localhost:5173)
-npm run build            # 本番ビルド
-npm run preview          # ビルド結果のプレビュー
-npm run new-sketch <name> # 新規スケッチ作成
-npx tsc --noEmit         # 型チェック
-```
+## Repo Signals
 
-## ディレクトリ構造
+- Stack: p5.js, Vite, TypeScript, TailwindCSS, highlight.js, tone.
+- No dedicated lint or unit test runner is configured; no Cursor or Copilot rule files are present.
+- Existing `AGENTS.md` is the source of repo guidance and should be kept current.
 
-```
-.
-├── index.html              # メインHTML
-├── src/
-│   ├── main.ts            # アプリケーションのエントリーポイント
-│   ├── daily/             # スケッチファイルを配置
-│   │   └── 1_spring.ts    # スケッチ例（ID_名前.tsの形式）
-│   ├── resize/            # リサイズ関連ユーティリティ
-│   └── theme/             # テーマシステム
-│       ├── types.ts       # テーマ型定義
-│       ├── config.ts      # テーマ設定
-│       └── index.ts       # テーマ管理
-├── scripts/
-│   └── new-sketch.js      # 新規スケッチ生成スクリプト
-├── style.css              # グローバルスタイル
-└── package.json
-```
+## Working Approach
 
-## コードスタイル
+- Read the smallest relevant files first, then edit only what the task needs.
+- Preserve sketch routes, theme switching, and source rendering unless the request says otherwise.
+- Prefer additive changes over structural rewrites.
+- If a change touches browser behavior, verify it in the dev server after type-checking.
+- Treat `src/daily/0_testing.ts` as a useful scratch/debug sketch, not production content.
 
-### TypeScript
+## Essential Commands
 
-- **型**: 厳格な型付けを使用。`any`は避ける
-- **インポート**: 型インポートには`import type`を使用
-- **命名**:
-  - 変数・関数: camelCase (`getColor`, `themeName`)
-  - 型・インターフェース: PascalCase (`ThemeColors`, `GetColorFn`)
-  - 定数: UPPER_SNAKE_CASE or camelCase
-- **エラー処理**: try-catchで適切に処理、console.errorでログ出力
+Use npm scripts when possible.
 
-### スケッチの作成方法
+- `npm run dev` - start the Vite dev server for day-to-day sketch work.
+- `npm run devHost` - expose the dev server on the network for device testing.
+- `npm run build` - run `tsc` and then create a production bundle with Vite.
+- `npm run preview` - serve the production build locally for a final smoke test.
+- `npm run new-sketch <name>` - create the next numbered sketch in `src/daily/`.
+- `npx tsc --noEmit` - run the TypeScript compiler in check-only mode.
 
-自動生成（推奨）:
+## Single Test / Narrow Verification
 
-```bash
-npm run new-sketch <スケッチ名>
-# 例: npm run new-sketch spring
-```
+There is no test framework configured yet, so there is no true single-test command today.
+Use `npx tsc --noEmit` for the fastest repo-wide check, then `npm run dev` for browser verification, and `npm run build` before finalizing changes.
+If tests are added later, document the exact targeted invocation here.
 
-これにより以下が自動生成されます：
+## Verification Checklist
 
-- `src/daily/{次のID}_{スケッチ名}.ts`
-- 既存の最大ID + 1 が自動付与
-- setup/drawの基本構造付き（getColor対応済み）
+- `npx tsc --noEmit` passes.
+- `npm run build` passes.
+- The changed sketch loads from `/sketches/<id>`.
+- Theme switching still updates the label and CSS variables.
+- Source code highlighting still appears for the active sketch.
+- Responsive resizing still works for the canvas.
 
-手動作成時のテンプレート:
+## Sketch Conventions
 
-```typescript
-import type p5 from 'p5'
-import type { GetColorFn } from '../theme/types'
-import { createFitCanvas } from '../resize/canvas'
-import { resizer } from '../resize/resize'
+- A sketch module should export `setup(p, getColor)` and `draw(p, getColor)`.
+- Use `GetColorFn` from `src/theme/types.ts` for theme-aware colors.
+- Keep sketch state local unless persistence is truly needed.
+- `resizer.p5(p)` is the normal way to make a sketch respond to window changes.
+- `createFitCanvas()` is the standard canvas creator for fixed aspect ratios.
+- New sketch files should follow `ID_name.ts` naming with a unique numeric prefix.
 
-export const setup = (p: p5, getColor: GetColorFn) => {
-  createFitCanvas(600, 600, p)
-  resizer.p5(p)
-  p.background(getColor('s_bg'))
-}
+## TypeScript Guidelines
 
-export const draw = (p: p5, getColor: GetColorFn) => {
-  p.background(getColor('s_bg'))
-  p.fill(getColor('s_primary'))
-  p.noStroke()
-  p.ellipse(p.width / 2, p.height / 2, 100, 100)
-}
-```
+- Keep `strict`-compatible code; avoid `any` unless there is no practical alternative.
+- Prefer explicit types on exported functions, complex objects, and public APIs.
+- Use `import type` for type-only imports.
+- Prefer `interface` for object shapes that are extended or reused.
+- Prefer type aliases for unions, tuples, and callable signatures.
+- Do not widen types unnecessarily when a narrow union is available.
+- Let inference handle obvious local values when it improves readability.
+- Avoid `unknown` unless you immediately narrow it.
 
-## テーマシステム
+## Import Rules
 
-### テーマの定義
+- Group imports as: external packages, local modules, local types.
+- Keep type-only imports separate when it improves clarity.
+- Match the quote style already used in the file you are editing.
+- Do not introduce barrel files unless they reduce obvious duplication.
+- Remove unused imports immediately; the tsconfig already disallows them.
 
-`src/theme/config.ts`でテーマを定義:
+## Formatting Rules
 
-```typescript
-export const themeConfig: ThemeConfig = {
-  useDefaultTheme: false,
-  defaultTheme: 'frappe-light',
-  themes: {
-    'theme-name': {
-      bg: '#f2f4f8',           // ページ背景
-      panelOpacity: 0.85,      // ソースパネル透明度(0-1)
-      text: '#4c4f69',         // メインテキスト
-      textMuted: '#6c6f85',    // サブテキスト
-      border: '#9ca0b0',       // 枠線
-      s_bg: '#e6e9ef',         // p5 背景
-      s_stroke: '#4c4f69',     // 線
-      s_primary: '#7287fd',    // メインの塗りつぶし
-      s_secondary: '#8839ef',  // サブの塗りつぶし
-      s_accent: '#e78284',     // アクセント
-    },
-  },
-}
-```
+- Use 2-space indentation.
+- Keep lines reasonably short and readable.
+- Avoid semicolon churn; follow the nearby file style.
+- Prefer trailing commas in multi-line objects and arrays when the file already uses them.
+- Keep object and function layout simple and predictable.
+- Do not run a repo-wide reformat unless the user explicitly asked for it.
 
-### スケッチで色を使用
+## Naming Conventions
 
-```typescript
-export const draw = (p: p5, getColor: GetColorFn) => {
-  p.background(getColor('s_bg'))      // サジェストが出ます
-  p.fill(getColor('s_primary'))       // s_secondary, s_stroke, s_accentも使用可能
-  p.stroke(getColor('s_stroke'))
-  // ...
-}
-```
+- Variables and functions: `camelCase`.
+- Types, interfaces, and classes: `PascalCase`.
+- Constants: `UPPER_SNAKE_CASE` for true constants, otherwise `camelCase` is acceptable.
+- File names for sketches: `number_name.ts`.
+- Use descriptive names over abbreviations, except for standard short aliases like `p` in p5 code.
 
-利用可能なスケッチ用色キー:
+## Error Handling
 
-- `s_bg` - 背景色
-- `s_stroke` - 線・輪郭
-- `s_primary` - メインのオブジェクト塗り
-- `s_secondary` - サブのオブジェクト塗り
-- `s_accent` - ハイライト・反応色
+- Use `try/catch` around dynamic imports, file access, or other fallible operations.
+- Log unexpected failures with `console.error`.
+- Use `console.warn` for recoverable issues.
+- Keep user-facing error messages short and actionable.
+- Prefer graceful fallback UI over throwing during app startup.
 
-## URLルーティング
+## p5 and Sketch Style
 
-- **一覧表示**: 最新のスケッチを自動表示
-- **直接アクセス**: `/sketches/{ID}`
-  - 例: `/sketches/1`
-- **ランダム表示**: 「BORED!」ボタンでランダム遷移
-- **テーマ切り替え**: 「CHANGE THEME」ボタンでランダムテーマ
+- Keep `setup` responsible for one-time setup and `draw` for frame updates.
+- Reset canvas state explicitly when switching sketches.
+- Avoid relying on globals shared across sketches.
+- Keep animation state local and deterministic when possible.
+- If a sketch needs resizing, update both the resize handler and any cached dimensions.
+- Use `getColor('s_bg')`, `getColor('s_primary')`, etc. instead of hard-coded sketch colors.
 
-## スケッチ仕様
+## Theme and UI Style
 
-- スケッチ切り替え時、前回の状態は**保持されません**
-- 毎回新しいp5インスタンスが作成されます
-- コンテナ要素が完全にクリアされます
+- Theme colors live in `src/theme/config.ts`.
+- Theme utilities should update CSS variables through `applyThemeToDOM()`.
+- Keep theme names stable once exposed in the UI.
+- Do not hard-code theme-sensitive colors in unrelated components if a CSS variable exists.
+- Preserve the current source-panel and sketch-panel behavior unless a change is clearly intended.
 
-## スケッチID
+## CSS / HTML Notes
 
-- ファイル名の先頭数字をIDとして使用
-- 例: `1_spring.ts` → ID: `1`
-- IDは重複不可（重複時は最初に見つかったものが使用される）
+- Keep global style changes in `style.css` focused and intentional.
+- Prefer CSS variables for colors that are theme-driven.
+- Preserve the touch and overscroll handling already in place unless you are fixing a bug there.
+- Avoid broad selector changes that could affect the p5 canvas or source viewer unexpectedly.
 
-## 注意事項
+## Editing Safety
 
-- スケッチ内でグローバル変数を使用する場合は注意（前回の状態が残る可能性）
-- キャンバスサイズは各スケッチのsetup内で自由に設定可能
-- リサイズ処理が必要な場合は、p5の`windowResized`関数を使用
-- 型チェックを必ず実行: `npx tsc --noEmit`
+- Do not overwrite user changes you did not make.
+- Do not remove sketches or theme entries unless the user asked for that.
+- Be careful with `src/daily/0_testing.ts`; it is a debug sketch and may be useful during development.
+- If you change sketch loading, verify direct URLs like `/sketches/<id>` still work.
+- If you change theme selection, verify the random theme button and theme label update correctly.
+
+## Before You Finish
+
+- Run `npx tsc --noEmit` for quick confidence.
+- Run `npm run build` for final verification.
+- Smoke test browser-facing changes with `npm run dev`.
+- Update this file if you add a new workflow or command.

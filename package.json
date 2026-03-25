@@ -11,16 +11,17 @@
     "new-sketch": "node scripts/new-sketch.js"
   },
   "devDependencies": {
-    "typescript": "~5.8.3",
-    "vite": "^6.3.5",
+    "@types/highlightjs": "^9.12.6",
     "@types/p5": "^1.7.6",
-    "@types/highlightjs": "^9.12.6"
+    "typescript": "~5.8.3",
+    "vite": "^6.3.5"
   },
   "dependencies": {
     "@catppuccin/highlightjs": "^1.0.1",
     "@tailwindcss/vite": "^4.1.8",
     "highlight.js": "^11.11.1",
     "p5": "^2.0.2",
-    "tailwindcss": "^4.1.8"
+    "tailwindcss": "^4.1.8",
+    "tone": "^15.1.22"
   }
 }
