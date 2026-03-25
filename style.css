@@ -78,6 +78,37 @@ button{
     display: block;
 }
 
+
+/* Scroll bar - shoutout to https://www.cssportal.com/css-scrollbar-generator/ */
+body {
+  --sb-track-color: transparent;
+  --sb-thumb-color: var(--color-border);
+  --sb-size: 5px;
+}
+
+body::-webkit-scrollbar {
+  width: var(--sb-size)
+}
+
+body::-webkit-scrollbar-track {
+  background: var(--sb-track-color);
+  border-radius: 2px;
+}
+
+body::-webkit-scrollbar-thumb {
+  background: var(--sb-thumb-color);
+  border-radius: 2px;
+  
+}
+
+@supports not selector(::-webkit-scrollbar) {
+  body {
+    scrollbar-color: var(--sb-thumb-color)
+                     var(--sb-track-color);
+  }
+}
+
+
 /*
 Source - https://stackoverflow.com/a/74691376
 Posted by fuweichin, modified by community. See post 'Timeline' for change history
