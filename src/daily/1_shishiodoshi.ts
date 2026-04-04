@@ -1,6 +1,6 @@
 import type p5 from 'p5'
 import type { GetColorFn } from '../theme/types'
-import { resizer } from '../resize/resize'
+import { resizer, type ResizeHandle } from '../resize/resize'
 import { createFitCanvas } from '../resize/canvas'
 import { lerp } from '../utility/math'
 
@@ -14,9 +14,11 @@ let aVel = 0
 
 let dragging = false
 
+let rsHandle: ResizeHandle
+
 export const setup = (p: p5, clr: GetColorFn) => {
   createFitCanvas(600, 600, p)
-  resizer.p5(p)
+  rsHandle = resizer.p5(p)
 
   p.strokeWeight(3)
 
@@ -94,6 +96,13 @@ export const draw = (p: p5, clr: GetColorFn) => {
   }
 
   ang += aVel
+}
+
+export const close = () => {
+  if (rsHandle){
+    rsHandle()
+    rsHandle = null
+  }
 }
 
 const within = (rx: number, ry: number, x: number, y: number) => (x >= 0 && x <= rx && y >= 0 && y <= ry)
