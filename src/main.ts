@@ -9,6 +9,7 @@ import type { GetColorFn } from './theme/types'
 interface SketchModule {
   setup: (p: p5, getColor: GetColorFn) => void
   draw: (p: p5, getColor: GetColorFn) => void
+  close?: () => void
 }
 
 const sketchModules: Record<string, () => Promise<unknown>> = import.meta.glob(
@@ -29,6 +30,7 @@ const themeTrigger = document.getElementById("theme-trigger") as HTMLElement
 hljs.registerLanguage('typescript', typescript)
 hljs.highlightElement(sourceCodeBlock)
 
+let currentSketchModule: SketchModule | null = null
 let currentSketchInstance: p5 | null = null
 let currentSketchPath: string | null = null
 
@@ -92,6 +94,12 @@ function getIdFromUrl(): string | null {
 }
 
 async function loadSketch(sketchInfo: SketchInfo) {
+  if (currentSketchModule) {
+    if (currentSketchModule.close && typeof currentSketchModule.close === "function"){
+      currentSketchModule.close()
+    }
+  }
+
   // 既存のスケッチを完全に削除
   if (currentSketchInstance) {
     currentSketchInstance.remove()
@@ -111,6 +119,7 @@ async function loadSketch(sketchInfo: SketchInfo) {
     
     if (sketch && typeof sketch.setup === "function" && typeof sketch.draw === "function") {
       const getColor = createGetColor()
+      currentSketchModule = sketch
       currentSketchInstance = new p5((p: p5) => {
         p.setup = () => {
           sketch.setup(p, getColor)

@@ -1,5 +1,5 @@
 import p5 from "p5"
-import { subscribe as init } from "./core"
+import { subscribe } from "./core"
 
 interface CanvasState {
   idealWidth: number
@@ -7,6 +7,9 @@ interface CanvasState {
 }
 
 const canvasState = new WeakMap<p5, CanvasState>()
+const unsubscribeMap = new WeakMap<p5, () => void>()
+
+export type ResizeHandle = (() => void) | null
 
 function calculateFitSize(
   idealWidth: number,
@@ -40,8 +43,9 @@ export class resizer {
      *
      * @param {p5} p p5 context
      * @param {?() => void} [exFunc] Extra function to execute on resize event
+     * @returns {() => void} Unsubscribe function.
      */
-    static p5(p: p5, exFunc?: () => void): void;
+    static p5(p: p5, exFunc?: () => void): () => void;
     
     /**
      * Registar on-resize function with p5.js.
@@ -54,13 +58,20 @@ export class resizer {
      * @param {number} idealWidth Ideal canvas width (used to calculate aspect ratio)
      * @param {number} idealHeight Ideal canvas height (used to calculate aspect ratio)
      * @param {?() => void} [exFunc] Extra function to execute on resize event
+     * @returns {() => void} Unsubscribe function.
      */
-    static p5(p: p5, idealWidth: number, idealHeight: number, exFunc?: () => void): void;
+    static p5(p: p5, idealWidth: number, idealHeight: number, exFunc?: () => void): () => void;
     
     static p5(
         p: p5,
         ...args: [(() => void)?] | [number, number, (() => void)?]
-    ): void {
+    ): () => void {
+        const previousUnsubscribe = unsubscribeMap.get(p)
+        if (previousUnsubscribe) {
+            previousUnsubscribe()
+            unsubscribeMap.delete(p)
+        }
+
         let idealWidth: number
         let idealHeight: number
         let exFunc: (() => void) | undefined
@@ -80,7 +91,7 @@ export class resizer {
         // Store the ideal dimensions for resize calculations
         canvasState.set(p, { idealWidth, idealHeight })
         
-        init(() => {
+        const unsubscribe = subscribe(() => {
             const state = canvasState.get(p)
             if (!state) return
             
@@ -90,6 +101,9 @@ export class resizer {
             
             if (exFunc) exFunc()
         })
+
+        unsubscribeMap.set(p, unsubscribe)
+        return unsubscribe
     }
     
     /**
