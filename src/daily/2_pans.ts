@@ -103,7 +103,7 @@ const onClick = (p: p5) => {
     const { x, y } = positions[i]
     if (Math.hypot(mx - x, my - y) <= PAN_DIAMETER / 2) {
       tweenStart[i] = p.millis()
-      pan?.triggerAttackRelease(notes[i] + "5", "1n")
+      pan?.triggerAttackRelease(notes[i] + "5", "1n", Tone.now())
       return
     }
   }
