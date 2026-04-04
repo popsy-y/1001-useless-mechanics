@@ -10,10 +10,6 @@ let reverb: Tone.Reverb | null
 let chorus: Tone.Chorus | null
 let resizeHandle: ResizeHandle
 
-const coolTimeMn = 100
-let currentCoolTime = coolTimeMn
-let lastChime = 0
-
 export const setup = (p: p5, getColor: GetColorFn) => {
   Tone.start()
 
@@ -59,13 +55,10 @@ export const setup = (p: p5, getColor: GetColorFn) => {
   reverb.connect(chorus)
   chorus.toDestination()
 
-  currentCoolTime = coolTimeMn
-  lastChime = 0
-
   p.stroke(getColor('s_stroke'))
   p.strokeWeight(5)
 
-  p.mousePressed = (ev) => onClick(ev, p)
+  p.mousePressed = _ => onClick(p)
 }
 
 const notes = "C,D,E,G,A".split(',')
@@ -101,7 +94,7 @@ export const draw = (p: p5, getColor: GetColorFn) => {
   }
 }
 
-const onClick = (ev: MouseEvent | undefined, p: p5) => {
+const onClick = (p: p5) => {
   const mx = p.mouseX
   const my = p.mouseY
 
